@@ -1,10 +1,10 @@
 {
   "name": "ui-balance",
-  "description": "Balance a web app's finished look: typography, colors, spacing, component sizes and interaction states across pages, dialogs, lists, chats and comments, verified in the running app with before/after evidence.",
+  "description": "Frontend finishing skills: balance a web app's typography, colors, spacing and states (ui-balance), polish pages until they are ready to market (polish-page, polish-app), and apply Feature-Sliced Design + styled-components conventions (fsd-styled-components).",
   "author": {
     "name": "Ivan"
   },
   "repository": "https://github.com/YOUR_GH_USER/ui-balance",
   "license": "MIT",
-  "keywords": ["ui", "design", "frontend", "visual-review", "polish", "consistency"]
+  "keywords": ["ui", "design", "frontend", "visual-review", "polish", "consistency", "feature-sliced-design", "styled-components"]
 }

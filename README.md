@@ -1,16 +1,24 @@
 # ui-balance
 
-An agent skill that gives a web app's frontend a finishing pass: it walks the
-running app page by page, opens the dialogs, drawers, lists, chats and comment
-threads the routes hide, and balances what it finds — typography, colors,
-spacing, component sizes, alignment and interaction states — while keeping the
-product's behavior and design.
+Agent skills for finishing a web app's frontend. They walk the running app,
+measure what they see, and fix drift from your own design tokens, shared
+components and written conventions — without imposing a palette or a layout
+system, and without changing product behavior.
 
-It is a method, not a style. It reads your design tokens, shared components and
-written conventions and corrects drift from them; it does not impose a palette
-or a layout system.
+| Skill | Use it for |
+| --- | --- |
+| [`ui-balance`](skills/ui-balance/SKILL.md) | A visual-consistency pass: typography, colors, spacing, component sizes and interaction states across pages, dialogs, lists, chats and comments. |
+| [`polish-page`](skills/polish-page/SKILL.md) | Finishing one page, or a short list of them, until it is dense, complete and ready to market. |
+| [`polish-app`](skills/polish-app/SKILL.md) | The app-wide version of polish-page: inventory every screen, fix cross-page drift in the shared layer, then polish page by page. |
+| [`fsd-styled-components`](skills/fsd-styled-components/SKILL.md) | Feature-Sliced Design placement, public exports, styled-components and data-attribute variant conventions for building or reviewing components. |
 
-## What it does
+The polish skills and ui-balance apply `fsd-styled-components` when a project
+uses Feature-Sliced Design or styled-components, and follow the project's own
+conventions otherwise.
+
+## What they do
+
+### ui-balance
 
 - **Builds an inventory** from the route table and the app root, then traces the
   overlays and shell surfaces (sidebar, mobile drawer, global chat, inline
@@ -34,9 +42,40 @@ or a layout system.
 - **Finishes** only when every inventoried surface has a final status for every
   applicable dimension — not after normalizing font sizes.
 
-It needs a runnable local dev server (demo or mock data preferred) and a browser
-the agent can drive (Claude in Chrome, a built-in browser pane, or a Playwright
-MCP server).
+### polish-page
+
+Takes one or more URLs or app paths and gives each page a full pass: capture it
+at 1440 and 390 before any change, inventory its blocks, then apply nine layout
+rules (each fact shown once, related content in one card, equal panel heights,
+a compact header, joined action pills, dense rhythm, rows aligned across
+columns), reuse the shared components instead of local clones, add the missing
+states (skeleton, retryable error, empty, guest gate), the page head and
+restrained motion, and verify with measurements at four widths. With several
+pages it captures the set first, fixes what they share once, and keeps their
+measurements in agreement.
+
+### polish-app
+
+Inventories every screen and format (tabs, steps, dialogs and their phone
+drawers, guest and signed-in views), builds a contact sheet, audits eleven
+cross-page concerns (columns, headers, blocks, one look per domain object,
+states, page heads, copy, control sizes, motion, navigation, domain rules),
+sweeps the source for raw colors, native controls, hard-coded paths and local
+clones, then works in rounds: shared fixes first, then pages in the order a new
+visitor meets them. It stops after the audit for you to confirm the order.
+
+### fsd-styled-components
+
+Where code goes (layers, slices, segments, barrels and import direction), how
+state, multi-step actions and API errors are owned, how styled components are
+named, ordered and extended, and how variants are expressed as typed `data-*`
+attributes or native/ARIA state. Includes a reference with a styling example, an
+action pattern (with an optional [Effect](https://effect.website) variant) and a
+feature spec template.
+
+All of them need a runnable local dev server (demo or mock data preferred) and,
+except fsd-styled-components, a browser the agent can drive (Claude in Chrome, a
+built-in browser pane, or a Playwright MCP server).
 
 ## Install
 
@@ -51,9 +90,10 @@ claude plugin install ui-balance@ivan-skills
 ```
 
 Or inside a session: `/plugin marketplace add YOUR_GH_USER/ui-balance`, then
-`/plugin install ui-balance@ivan-skills`. The skill is invoked as
-`/ui-balance:ui-balance`, and Claude also picks it up on its own when you ask for
-a UI balance or visual-consistency pass.
+`/plugin install ui-balance@ivan-skills`. The skills are invoked as
+`/ui-balance:ui-balance`, `/ui-balance:polish-page`, `/ui-balance:polish-app` and
+`/ui-balance:fsd-styled-components`, and Claude also picks them up on its own
+when a request matches.
 
 The plugin has no `version` field, so every new commit on the default branch is
 a new version; `claude plugin update ui-balance@ivan-skills` pulls it.
@@ -64,38 +104,51 @@ a new version; `claude plugin update ui-balance@ivan-skills` pulls it.
 npx skills@latest add YOUR_GH_USER/ui-balance
 ```
 
-Add `-a <agent>` to pick the agent, `-g` to install for your user rather than the
-project. Installed this way into Claude Code, it is invoked as `/ui-balance`; in
-Codex, as `$ui-balance`. Use one install method per agent — installing both the
-plugin and the `npx skills` copy into Claude Code gives you the skill twice.
+Add `--skill <name>` to install only some of them, `-a <agent>` to pick the
+agent, and `-g` to install for your user rather than the project. Installed this
+way into Claude Code, a skill is invoked by its own name (`/ui-balance`,
+`/polish-page`); in Codex, as `$ui-balance`. The polish skills link to
+polish-page and fsd-styled-components, so install those alongside them. Use one
+install method per agent — installing both the plugin and the `npx skills` copy
+into Claude Code gives you every skill twice.
 
 ## Usage
 
 ```text
 /ui-balance:ui-balance
 /ui-balance:ui-balance settings, feed, product details
-/ui-balance:ui-balance dialogs, chat, comments
 /ui-balance:ui-balance audit only /messages
+/ui-balance:polish-page /settings
+/ui-balance:polish-page http://localhost:5173/products /products/42 keep the hero
+/ui-balance:polish-app
+/ui-balance:polish-app checkout, account pages
 ```
 
-- No arguments — the whole active app, including its dialogs and other overlays.
-- Routes, features or components — narrows the scope to those and the surfaces
-  they open.
-- `audit only` — findings, a coverage ledger and baseline evidence, no edits.
+- ui-balance with no arguments covers the whole active app, including its
+  dialogs and other overlays; routes, features or components narrow it; `audit
+  only` reports findings and evidence without edits.
+- polish-page takes URLs or paths in order; any other words are directions.
+- polish-app with no arguments covers every page; names or areas limit it.
 
-The skill edits frontend styling and layout only, works through fixes without
-pausing for approval of the audit, and commits only when you ask.
+The skills edit frontend code only, and commit only when you ask.
 
-## Project add-on
+## Project add-ons
 
 Every project names its route table, tokens and shared components differently.
-The skill discovers them, but a short add-on file makes the pass faster and
-keeps project rules from being guessed. Put it at **`.claude/ui-balance.md`**
-(or `.agents/ui-balance.md`) in your repository; the skill reads it before it
-starts, and what it says overrides the skill's generic discovery and fallbacks.
-Your instructions in the request override both.
+The skills discover them, but a short add-on file per skill makes a pass faster
+and keeps project rules from being guessed. Each skill reads
+**`.claude/<skill-name>.md`** (or `.agents/<skill-name>.md`) before it starts,
+and what it says overrides the skill's generic discovery and defaults; your
+instructions in the request override both.
 
-A useful add-on is short and specific:
+| File | Typical contents |
+| --- | --- |
+| `.claude/ui-balance.md` | Route table and app root, tokens, typography, dialog primitive, chat and comment components, type scale, palette rules, run and check commands. |
+| `.claude/polish-page.md` | Shared component names (identity row, meta line, badge, stat, delta, empty state, …), the page-columns helper, header and control sizes, head mechanism and title pattern, copy voice, demo sign-in, pitfalls. |
+| `.claude/polish-app.md` | Page order, alternate builds, removed features never to restore, domain rules, commit style. polish-app also reads `polish-page.md`. |
+| `.claude/fsd-styled-components.md` | Source root and alias, layer and segment set, state library and binding, HTTP client, optimistic/runner helpers, demo fixtures, architecture doc. |
+
+An example for ui-balance:
 
 ```markdown
 # ui-balance: project add-on
@@ -125,18 +178,24 @@ A useful add-on is short and specific:
 
 ```text
 .claude-plugin/
-  plugin.json          Claude Code plugin manifest
-  marketplace.json     single-plugin marketplace "ivan-skills"
-skills/ui-balance/
-  SKILL.md             the method
-  references/
-    visual-review.md   criteria for dialogs, lists, chat, comments, color and spacing
-    measure-ui.js      read-only browser expression for computed-style snapshots
-  agents/openai.yaml   display metadata for Codex
+  plugin.json                Claude Code plugin manifest
+  marketplace.json           single-plugin marketplace "ivan-skills"
+skills/
+  ui-balance/
+    SKILL.md                 the visual-consistency method
+    references/
+      visual-review.md       criteria for dialogs, lists, chat, comments, color and spacing
+      measure-ui.js          read-only browser expression for computed-style snapshots
+    agents/openai.yaml       display metadata for Codex
+  polish-page/SKILL.md       one page, or a short list, to market-ready
+  polish-app/SKILL.md        every page, with the cross-page audit
+  fsd-styled-components/
+    SKILL.md                 FSD + styled-components conventions
+    REFERENCE.md             examples, actions, API errors, spec template
 ```
 
-When changing the skill's scope, keep `SKILL.md`'s description, the manifests'
-descriptions and `agents/openai.yaml` consistent.
+When changing a skill's scope, keep its `SKILL.md` description, the manifests'
+descriptions and (for ui-balance) `agents/openai.yaml` consistent.
 
 ## License
 

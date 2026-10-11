@@ -42,7 +42,9 @@ agents use their own skill syntax, such as `$ui-balance` in Codex):
 - Find and follow the project's own styling conventions: the frontend sections of
   `CLAUDE.md`/`AGENTS.md`, project skills about components or styling (for
   example under `.claude/skills/` or `.agents/skills/`), a design-system or
-  style-guide document, and the lint/stylelint rules that enforce them. Read only
+  style-guide document, and the lint/stylelint rules that enforce them. When the
+  project uses Feature-Sliced Design or styled-components, apply the
+  [fsd-styled-components](../fsd-styled-components/SKILL.md) skill. Read only
   the relevant feature specs and design references. Use current shared theme
   tokens and component variants as the starting point; explicit user corrections
   take precedence over older specifications.
