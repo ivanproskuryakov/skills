@@ -291,7 +291,6 @@ Base branch: dev
 ```text
 .claude-plugin/
   plugin.json                Claude Code plugin manifest
-  icon.png                   listing icon
   marketplace.json           marketplace "ivanproskuryakov" with one plugin, "ui-tools"
 skills/
   ui-balance/
