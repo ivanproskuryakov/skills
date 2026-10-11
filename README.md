@@ -55,8 +55,9 @@ Each skill is invoked as `/skills:<skill>`, and Claude also loads one on its
 own when a request matches its description. The six descriptions add about 550
 tokens to every session; a skill's full instructions load only when it is used.
 
-The plugin has no `version` field, so every commit on the default branch is a new
-version. To update, run the following and restart Claude Code:
+Releases are versioned: a new release raises `version` in
+`.claude-plugin/plugin.json`. To update, run the following and restart Claude
+Code:
 
 ```bash
 claude plugin update skills@ivanproskuryakov
@@ -290,6 +291,7 @@ Base branch: dev
 ```text
 .claude-plugin/
   plugin.json                Claude Code plugin manifest
+  icon.png                   listing icon
   marketplace.json           marketplace "ivanproskuryakov" with one plugin, "skills"
 skills/
   ui-balance/
