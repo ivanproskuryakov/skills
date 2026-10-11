@@ -108,10 +108,10 @@ renaming an API endpoint or field, an environment variable, a public route, a CL
 flag, or an export of a published package.
 
 ```
-feat(api)!: rename the billing interval variable
+feat(api)!: rename the project title field to name
 
-BREAKING CHANGE: APP_BILLING_CHARGE_INTERVAL_MS is now
-APP_BILLING_INTERVAL_MS; set it in api/.env before deploying.
+BREAKING CHANGE: projects take and return `name` instead of `title`;
+update API clients before deploying.
 ```
 
 ## Branches and pull requests

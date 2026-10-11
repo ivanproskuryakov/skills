@@ -200,8 +200,7 @@ Search DTOs extend a shared `SearchDto` and nest filter/sort sub-DTOs.
 ### Middleware (`middleware/`)
 
 - `ErrorHandler` — `@Middleware({ type: 'after' })` implements
-  `ExpressErrorMiddlewareInterface`; formats errors in one place and reports them
-  to the error tracker.
+  `ExpressErrorMiddlewareInterface`; formats every error in one place.
 - `ValidateRoles` — exported async function passed as `authorizationChecker`;
   resolves the user via the `Authenticator`, compares `user.roles` to
   `@Authorized([...])`. An empty roles array means any authenticated user.
@@ -286,8 +285,8 @@ useExpressServer(this.express, {
 })
 ```
 
-`app.ts` also configures `trust proxy` when behind a reverse proxy, error tracking
-outside local runs, `bodyParser.json`, and the Swagger UI.
+`app.ts` also configures `trust proxy` when behind a reverse proxy,
+`bodyParser.json`, and the Swagger UI.
 
 ### Decorators
 
@@ -298,7 +297,7 @@ outside local runs, `bodyParser.json`, and the Swagger UI.
 | `@HttpCode(200\|201)` | explicit status |
 | `@Authorized([EUserRole.ROLE_USER])` | class or method level |
 | `@Body({ validate: { groups }, transform: { groups } })` | validation groups |
-| `@CurrentUser()` | JWT user resolution |
+| `@CurrentUser()` | the signed-in user |
 | `@EntityFromParam({ paramName: 'id' })` | custom — load entity from route param (404 when missing) |
 | `@Req()`, `@Res()`, `@Param('name')` | request params |
 | `@OpenAPIExtended({ ... })` | custom OpenAPI composition, preferred where it exists |
@@ -328,31 +327,17 @@ endpoint documents itself the same way.
 
 ### Auth flow
 
-`ValidateRoles` reads the `Authorization` header → the `Authenticator` resolves the
-user from the JWT or throws → roles are checked against `@Authorized([...])`.
+`ValidateRoles` asks the `Authenticator` for the current user (or throws), then
+checks the user's roles against `@Authorized([...])`.
 
 ## Config / parameters
 
-### `IConfigParameters` (`model/config.ts`)
-
-```typescript
-export interface IConfigParameters {
-  host: string
-  port: number
-  sentry: string
-  redis: string
-  jwtSecret: string
-  database: { type; host; port; username; password; database }
-}
-```
-
-### `AppConfig` (`app/app-config.ts`)
-
-- Loads `.env` (or `.env.test` when `NODE_ENV=test`)
-- `getEnv()`, `isTest()`, `isProduction()`
-- `readConfig()` maps env vars (`APP_HOST`, `APP_PORT`, `APP_DB_*`, …)
-
-Injected as `@inject('parameters')` or `App.container.get('parameters')`.
+`AppConfig` (`app/app-config.ts`) turns the environment into one typed
+`IConfigParameters` object (`model/config.ts`) — host, port, database connection
+and the other settings the services need — and detects the environment
+(`getEnv()`, `isTest()`, `isProduction()`). The container binds it as
+`'parameters'`; services take it with `@inject('parameters')` (controllers with
+`App.container.get('parameters')`) instead of reading the environment themselves.
 
 ## Testing
 
