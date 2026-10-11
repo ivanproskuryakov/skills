@@ -1,10 +1,10 @@
 {
   "name": "ui-balance",
-  "description": "Frontend finishing skills: balance a web app's typography, colors, spacing and states (ui-balance), polish pages until they are ready to market (polish-page, polish-app), and apply Feature-Sliced Design + styled-components conventions (fsd-styled-components).",
+  "description": "Ivan's engineering skills: balance a web app's typography, colors, spacing and states (ui-balance), polish pages until they are ready to market (polish-page, polish-app), Feature-Sliced Design + styled-components conventions (fsd-styled-components), layered routing-controllers/Inversify/TypeORM backend conventions (api-backend), and Conventional Commits (semantic-commits).",
   "author": {
     "name": "Ivan"
   },
   "repository": "https://github.com/YOUR_GH_USER/ui-balance",
   "license": "MIT",
-  "keywords": ["ui", "design", "frontend", "visual-review", "polish", "consistency", "feature-sliced-design", "styled-components"]
+  "keywords": ["ui", "design", "frontend", "visual-review", "polish", "feature-sliced-design", "styled-components", "backend", "typeorm", "inversify", "routing-controllers", "conventional-commits", "git"]
 }

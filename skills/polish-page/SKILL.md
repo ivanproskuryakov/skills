@@ -24,7 +24,7 @@ Examples (as a Claude Code plugin the command is `/ui-balance:polish-page`):
 - **Keep the set consistent.** Measure the same things on every target: title size, header bar height, main column and rail x and width, card heading size and the gaps between cards. Values should agree across the set, and an outlier is a finding.
 - **Rounds.** Go straight through the list and present the whole set at the end, unless the user asked to review each page before the next.
 - **Report per page.** One short section per page — what changed and why, before and after screenshots, remaining dependencies — then the shared changes and the pages each one touched.
-- **Commits,** when the user asks: one per page (for example `feat: polish the <page>`, in the repository's commit style), plus one per shared change, staging only this session's hunks.
+- **Commits,** when the user asks: one per page (for example `feat: polish the <page>`, in the repository's commit style — [semantic-commits](../semantic-commits/SKILL.md) when it uses Conventional Commits), plus one per shared change, staging only this session's hunks.
 - **Whole app or a broad area** ("every account page", "all checkout screens"): use [polish-app](../polish-app/SKILL.md) instead, which adds the full inventory and the cross-page audit.
 
 ## Before changing anything

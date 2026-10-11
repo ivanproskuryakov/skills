@@ -145,8 +145,9 @@ each fix lands, the order, and anything that needs a product decision or backend
 ## Commits
 
 Commit only when the user asks. Then make one commit per shared change and one per page
-(for example `feat: polish the <page>`, in the repository's commit style), with a body
-grouped by block. Stage only this session's hunks.
+(for example `feat: polish the <page>`, in the repository's commit style —
+[semantic-commits](../semantic-commits/SKILL.md) when it uses Conventional Commits), with
+a body grouped by block. Stage only this session's hunks.
 
 ## Pitfalls
 
