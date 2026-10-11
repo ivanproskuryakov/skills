@@ -9,7 +9,7 @@ Polish the pages named by the user until each one is finished, dense, and ready 
 
 Work in rounds when the user wants an iterative review: complete a full pass, present the result, then apply feedback and re-verify. Do not commit until the user asks.
 
-Examples (as a Claude Code plugin the command is `/ivan-skills:polish-page`):
+Examples (as a Claude Code plugin the command is `/skills:polish-page`):
 
 - `/polish-page /settings` — one page.
 - `/polish-page http://localhost:5173/products /products/42 keep the hero` — two pages and a direction.

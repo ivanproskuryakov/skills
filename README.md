@@ -45,13 +45,13 @@ claude plugin marketplace add ivanproskuryakov/skills
 ```
 
 ```bash
-claude plugin install ivan-skills@ivanproskuryakov
+claude plugin install skills@ivanproskuryakov
 ```
 
 Or inside a session: `/plugin marketplace add ivanproskuryakov/skills`, then
-`/plugin install ivan-skills@ivanproskuryakov`.
+`/plugin install skills@ivanproskuryakov`.
 
-Each skill is invoked as `/ivan-skills:<skill>`, and Claude also loads one on its
+Each skill is invoked as `/skills:<skill>`, and Claude also loads one on its
 own when a request matches its description. The six descriptions add about 550
 tokens to every session; a skill's full instructions load only when it is used.
 
@@ -59,10 +59,10 @@ The plugin has no `version` field, so every commit on the default branch is a ne
 version. To update, run the following and restart Claude Code:
 
 ```bash
-claude plugin update ivan-skills@ivanproskuryakov
+claude plugin update skills@ivanproskuryakov
 ```
 
-To remove it: `claude plugin uninstall ivan-skills@ivanproskuryakov`.
+To remove it: `claude plugin uninstall skills@ivanproskuryakov`.
 
 ### Other agents (Codex, Cursor, Copilot, Gemini CLI, …)
 
@@ -83,20 +83,20 @@ give Claude Code every skill twice.
 
 ## Usage
 
-The examples use the plugin's names; with `npx skills`, drop the `ivan-skills:`
-prefix.
+The examples use the plugin's `/skills:` namespace. A skill installed with
+`npx skills` has no namespace: `/ui-balance`, `/polish-page`.
 
 ```text
-/ivan-skills:ui-balance
-/ivan-skills:ui-balance settings, feed, product details
-/ivan-skills:ui-balance audit only /messages
-/ivan-skills:polish-page /settings
-/ivan-skills:polish-page http://localhost:5173/products /products/42 keep the hero
-/ivan-skills:polish-app
-/ivan-skills:polish-app checkout, account pages
-/ivan-skills:fsd-styled-components review features/checkout
-/ivan-skills:api-backend add an endpoint that archives a project
-/ivan-skills:semantic-commits split the working tree into commits
+/skills:ui-balance
+/skills:ui-balance settings, feed, product details
+/skills:ui-balance audit only /messages
+/skills:polish-page /settings
+/skills:polish-page http://localhost:5173/products /products/42 keep the hero
+/skills:polish-app
+/skills:polish-app checkout, account pages
+/skills:fsd-styled-components review features/checkout
+/skills:api-backend add an endpoint that archives a project
+/skills:semantic-commits split the working tree into commits
 ```
 
 - **ui-balance** with no arguments covers the whole active app, including its
@@ -290,7 +290,7 @@ Base branch: dev
 ```text
 .claude-plugin/
   plugin.json                Claude Code plugin manifest
-  marketplace.json           marketplace "ivanproskuryakov" with one plugin, "ivan-skills"
+  marketplace.json           marketplace "ivanproskuryakov" with one plugin, "skills"
 skills/
   ui-balance/
     SKILL.md                 the visual-consistency method

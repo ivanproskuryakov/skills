@@ -8,7 +8,7 @@
   },
   "plugins": [
     {
-      "name": "ivan-skills",
+      "name": "skills",
       "source": "./",
       "description": "Engineering skills: ui-balance, polish-page, polish-app, fsd-styled-components, api-backend and semantic-commits.",
       "category": "development"
