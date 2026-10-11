@@ -247,9 +247,9 @@ Import as default: `import AccessException from '@/exception/access-exception'`.
 ### Container (`app/app-container.ts`)
 
 ```typescript
-public static build(parameters: IConfigParameters, env: string) {
+public static build(parameters: IConfigParameters, mode: string) {
   const container = new Container({ skipBaseClassChecks: true })
-  container.bind<string>('env').toConstantValue(env)
+  container.bind<string>('mode').toConstantValue(mode)
   container.bind<IConfigParameters>('parameters').toConstantValue(parameters)
   container.bind<Http>('Http').to(Http)
   container.bind<UserRepository>('UserRepository').to(UserRepository)
@@ -259,7 +259,7 @@ public static build(parameters: IConfigParameters, env: string) {
 }
 ```
 
-**Token convention:** token string = PascalCase class name. Exceptions: `'env'`,
+**Token convention:** token string = PascalCase class name. Exceptions: `'mode'`,
 `'parameters'`. No Symbols.
 
 | Layer | DI pattern |
@@ -332,12 +332,12 @@ checks the user's roles against `@Authorized([...])`.
 
 ## Config / parameters
 
-`AppConfig` (`app/app-config.ts`) turns the environment into one typed
-`IConfigParameters` object (`model/config.ts`) — host, port, database connection
-and the other settings the services need — and detects the environment
-(`getEnv()`, `isTest()`, `isProduction()`). The container binds it as
-`'parameters'`; services take it with `@inject('parameters')` (controllers with
-`App.container.get('parameters')`) instead of reading the environment themselves.
+Settings live in one typed `IConfigParameters` object (`model/config.ts`) — host,
+port, database connection and whatever else the services need — built once at
+startup by `AppConfig` (`app/app-config.ts`), which also reports the run mode
+(`isTest()`, `isProduction()`). The container binds it as `'parameters'`;
+services take it with `@inject('parameters')` (controllers with
+`App.container.get('parameters')`) rather than assembling settings themselves.
 
 ## Testing
 
