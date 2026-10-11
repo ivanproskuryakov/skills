@@ -21,7 +21,7 @@ and the running app instead of assuming a detail view is still a dialog.
 Proceed through authorized fixes without an audit approval pause. Commit only
 when requested.
 
-Examples (as a Claude Code plugin the command is `/ui-balance:ui-balance`; other
+Examples (as a Claude Code plugin the command is `/ivan-skills:ui-balance`; other
 agents use their own skill syntax, such as `$ui-balance` in Codex):
 
 - `/ui-balance` — the active app, including its dialogs and other overlays.

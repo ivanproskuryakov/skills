@@ -12,7 +12,7 @@ fixes that belong in the shared layer, and the order to work in.
 
 An argument limits the pass to the pages or areas it names (route names, paths, or areas
 such as "checkout" or "account pages"). With no argument the target is every page.
-As a Claude Code plugin the command is `/ui-balance:polish-app`.
+As a Claude Code plugin the command is `/ivan-skills:polish-app`.
 
 Work in rounds. Stop after the audit and let the user confirm the order, unless they
 asked to go straight through. Do not commit until the user asks.
