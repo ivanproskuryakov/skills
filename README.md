@@ -1,11 +1,12 @@
 # ui-balance
 
 Agent skills for finishing a web app and keeping its code and history in shape.
+
 The frontend skills walk the running app, measure what they see, and fix drift
 from your own design tokens, shared components and written conventions — without
 imposing a palette or a layout system, and without changing product behavior.
-The convention skills carry a backend architecture and a commit format from
-project to project.
+The convention skills carry a component architecture, a backend architecture and
+a commit format from project to project.
 
 | Skill | Use it for |
 | --- | --- |
@@ -13,15 +14,107 @@ project to project.
 | [`polish-page`](skills/polish-page/SKILL.md) | Finishing one page, or a short list of them, until it is dense, complete and ready to market. |
 | [`polish-app`](skills/polish-app/SKILL.md) | The app-wide version of polish-page: inventory every screen, fix cross-page drift in the shared layer, then polish page by page. |
 | [`fsd-styled-components`](skills/fsd-styled-components/SKILL.md) | Feature-Sliced Design placement, public exports, styled-components and data-attribute variant conventions for building or reviewing components. |
-| [`api-backend`](skills/api-backend/SKILL.md) | Layered conventions for a Node/TypeScript API on routing-controllers, Inversify and TypeORM: controllers, managers, repositories, entities, DTOs, DI wiring, exceptions and tests. |
-| [`semantic-commits`](skills/semantic-commits/SKILL.md) | Conventional Commits with fixed types, package scopes, one change per commit, breaking-change footers, branch and PR naming, and a header check. |
+| [`api-backend`](skills/api-backend/SKILL.md) | Layered conventions for a Node/TypeScript API on routing-controllers, Inversify and TypeORM. |
+| [`semantic-commits`](skills/semantic-commits/SKILL.md) | Conventional Commits: fixed types, package scopes, one change per commit, breaking-change footers, branch and PR names, and a header check. |
 
-The polish skills and ui-balance apply `fsd-styled-components` when a project
-uses Feature-Sliced Design or styled-components, and follow the project's own
-conventions otherwise; the polish skills commit with `semantic-commits` when the
-repository uses Conventional Commits.
+The skills work alone and link to each other where they overlap: ui-balance and
+the polish skills apply `fsd-styled-components` when a project uses Feature-Sliced
+Design or styled-components, polish-app runs polish-page on every page, and the
+polish skills commit with `semantic-commits` when the repository uses
+Conventional Commits.
 
-## What they do
+## Requirements
+
+- **ui-balance, polish-page, polish-app:** a local dev server the agent can start
+  (demo or mock data preferred), and a browser it can drive — Claude in Chrome, a
+  built-in browser pane, or a Playwright MCP server.
+- **fsd-styled-components:** a React frontend organized by Feature-Sliced Design
+  and/or styled with styled-components.
+- **api-backend:** a Node/TypeScript backend on routing-controllers, Inversify and
+  TypeORM.
+- **semantic-commits:** git. It applies where the repository already uses
+  Conventional Commits or you ask for them, and defers to the repository's own
+  convention otherwise.
+
+## Install
+
+### Claude Code (plugin)
+
+```bash
+claude plugin marketplace add YOUR_GH_USER/ui-balance
+```
+
+```bash
+claude plugin install ui-balance@ivan-skills
+```
+
+Or inside a session: `/plugin marketplace add YOUR_GH_USER/ui-balance`, then
+`/plugin install ui-balance@ivan-skills`.
+
+Each skill is invoked as `/ui-balance:<skill>`, and Claude also loads one on its
+own when a request matches its description. The six descriptions add about 550
+tokens to every session; a skill's full instructions load only when it is used.
+
+The plugin has no `version` field, so every commit on the default branch is a new
+version. To update, run the following and restart Claude Code:
+
+```bash
+claude plugin update ui-balance@ivan-skills
+```
+
+To remove it: `claude plugin uninstall ui-balance@ivan-skills`.
+
+### Other agents (Codex, Cursor, Copilot, Gemini CLI, …)
+
+```bash
+npx skills@latest add YOUR_GH_USER/ui-balance
+```
+
+- `--skill <name>` installs only the named skills; `-a <agent>` picks the agent;
+  `-g` installs for your user instead of the current project.
+- Installed this way, a skill is invoked by its own name: `/polish-page` in Claude
+  Code, `$polish-page` in Codex.
+- The skills link to each other (see above), so install the whole set unless you
+  only want one of the convention skills.
+- `npx skills update` pulls new commits; `npx skills remove <name>` removes one.
+
+Use one install method per agent: the plugin and an `npx skills` copy together
+give Claude Code every skill twice.
+
+## Usage
+
+The examples use the plugin's names; with `npx skills`, drop the `ui-balance:`
+prefix.
+
+```text
+/ui-balance:ui-balance
+/ui-balance:ui-balance settings, feed, product details
+/ui-balance:ui-balance audit only /messages
+/ui-balance:polish-page /settings
+/ui-balance:polish-page http://localhost:5173/products /products/42 keep the hero
+/ui-balance:polish-app
+/ui-balance:polish-app checkout, account pages
+/ui-balance:fsd-styled-components review features/checkout
+/ui-balance:api-backend add an endpoint that archives a project
+/ui-balance:semantic-commits split the working tree into commits
+```
+
+- **ui-balance** with no arguments covers the whole active app, including its
+  dialogs and other overlays. Routes, features or components narrow it, and
+  `audit only` reports findings and evidence without edits.
+- **polish-page** takes URLs or paths, in order; any other words are directions
+  for the pass. Without a page it asks for one.
+- **polish-app** with no arguments covers every page; names or areas limit it. It
+  stops after the audit for you to confirm the order, unless you ask it to go
+  straight through.
+- **fsd-styled-components, api-backend and semantic-commits** usually load on
+  their own while Claude builds components, changes the backend or commits.
+  Invoke them directly to review existing code or history against the rules.
+
+The frontend skills edit frontend code only. None of the skills commit unless
+you ask.
+
+## The skills
 
 ### ui-balance
 
@@ -49,131 +142,93 @@ repository uses Conventional Commits.
 
 ### polish-page
 
-Takes one or more URLs or app paths and gives each page a full pass: capture it
-at 1440 and 390 before any change, inventory its blocks, then apply nine layout
-rules (each fact shown once, related content in one card, equal panel heights,
-a compact header, joined action pills, dense rhythm, rows aligned across
-columns), reuse the shared components instead of local clones, add the missing
-states (skeleton, retryable error, empty, guest gate), the page head and
-restrained motion, and verify with measurements at four widths. With several
-pages it captures the set first, fixes what they share once, and keeps their
-measurements in agreement.
+- **Captures first**: each page full length at 1440×900 and 390×844 before any
+  change, then an inventory of its blocks — repeated facts, unfinished controls,
+  raw colors or spacing, local clones of shared components, missing states.
+- **Applies nine layout rules**, among them: show each fact once, group related
+  content in one card, give adjacent panels equal heights, keep the header
+  compact, join related actions into pills, align paired rows across columns to
+  the pixel, and keep a dense rhythm.
+- **Finishes the page**: shared components instead of local copies, the missing
+  states (skeleton, retryable error, empty, guest gate), the page head (title,
+  description, image, Open Graph type), and restrained motion. It adds promotional
+  content only where real data backs it.
+- **Verifies** at 1280, 1440, 1920 and 390 wide with measurements rather than by
+  eye, and exercises the page's interactions up to any consequential final step.
+- **With several pages**, it captures the whole set first, fixes what they share
+  once, and keeps their title sizes, bar heights and column positions in
+  agreement.
 
 ### polish-app
 
-Inventories every screen and format (tabs, steps, dialogs and their phone
-drawers, guest and signed-in views), builds a contact sheet, audits eleven
-cross-page concerns (columns, headers, blocks, one look per domain object,
-states, page heads, copy, control sizes, motion, navigation, domain rules),
-sweeps the source for raw colors, native controls, hard-coded paths and local
-clones, then works in rounds: shared fixes first, then pages in the order a new
-visitor meets them. It stops after the audit for you to confirm the order.
+- **Inventories every screen and format**: tabs, steps, dialogs and their phone
+  drawers, guest and signed-in views, alternate builds. Every format gets a ledger
+  row and a capture at both widths, and the captures go on one contact sheet,
+  where drift between pages shows.
+- **Audits eleven cross-page concerns**: columns, headers, blocks, one look per
+  domain object, states, page heads, copy, control sizes, motion, navigation and
+  domain rules.
+- **Sweeps the source** for raw colors, native controls outside the shared layer,
+  hard-coded paths, hand-written heads and scrollbars, stray motion and local
+  clones of shared components.
+- **Works in rounds**: shared fixes first, rechecking every page that uses them,
+  then one polish-page pass per page in the order a new visitor meets them.
+- **Verifies across the app** with one measuring script over every route, plus
+  page heads, console, network, navigation and the sign-in gate.
 
 ### fsd-styled-components
 
-Where code goes (layers, slices, segments, barrels and import direction), how
-state, multi-step actions and API errors are owned, how styled components are
-named, ordered and extended, and how variants are expressed as typed `data-*`
-attributes or native/ARIA state. Includes a reference with a styling example, an
-action pattern (with an optional [Effect](https://effect.website) variant) and a
-feature spec template.
+- **Placement**: layers (app, pages, widgets, features, entities, shared), slices,
+  segments, barrels and import direction.
+- **Ownership**: application state lives in a state segment, never in components;
+  multi-step flows live in actions with a handlers contract; API clients and
+  loaders each own their failures.
+- **Styling**: how styled components are named, ordered and extended, and how
+  variants are expressed as typed `data-*` attributes or native/ARIA state.
+- **Reference**: a styling example, the action pattern (with an optional
+  [Effect](https://effect.website) variant), API error contracts and a feature
+  spec template.
 
 ### api-backend
 
-A controller → `*Manager` service → repository → entity layering, with one firm
-rule: no helper functions at module scope — a helper with one caller is a
-`private` method on that class, a shared stateless one a `static` method on a
-utility class, one with collaborators an injectable service (framework plumbing
-excepted). It covers Inversify tokens and where to bind them, why controllers
-resolve from the container instead of `@inject`, TypeORM entities with
-serialization groups, DTOs, exceptions, error middleware, role checks, OpenAPI
-composition, tests, and a step-by-step checklist for a new endpoint. It applies to
-backends on that stack; a project's own base classes and decorator names win.
+- **Layers**: controller → `*Manager` service → repository → entity. Controllers do
+  HTTP only.
+- **One firm rule**: no helper functions at module scope. A helper with one caller
+  is a `private` method on that class; a shared stateless one is a `static` method
+  on a utility class; one with collaborators is an injectable service. Framework
+  plumbing is the only exception.
+- **Wiring**: Inversify tokens named after their class and where to bind them,
+  and why controllers resolve from the container instead of using `@inject`.
+- **Patterns** for entities with serialization groups, DTOs, exceptions, error
+  middleware, role checks, OpenAPI composition and tests, plus a step-by-step
+  checklist for a new endpoint. A project's own base classes and decorator names
+  win over the examples.
 
 ### semantic-commits
 
-`type(scope): subject` headers of at most 72 characters, eleven types with a rule
-for each (visual CSS is `feat`/`fix`, never `style`), scopes taken from the
-repository's packages, one logical change per commit (split by hunk when a file
-mixes concerns, each commit building on its own), `!` plus a `BREAKING CHANGE:`
-footer for anything a consumer has to act on, `<type>/<topic>` branches and PR
-titles, a two-line check over the branch's headers, and safe ways to fix a header
-before it is pushed. It applies where the repository already uses Conventional
-Commits or you ask for them, and follows the repository's own convention
-otherwise.
-
-The frontend skills need a runnable local dev server (demo or mock data
-preferred) and, except fsd-styled-components, a browser the agent can drive
-(Claude in Chrome, a built-in browser pane, or a Playwright MCP server).
-
-## Install
-
-### Claude Code (plugin)
-
-```bash
-claude plugin marketplace add YOUR_GH_USER/ui-balance
-```
-
-```bash
-claude plugin install ui-balance@ivan-skills
-```
-
-Or inside a session: `/plugin marketplace add YOUR_GH_USER/ui-balance`, then
-`/plugin install ui-balance@ivan-skills`. The skills are invoked as
-`/ui-balance:<skill>` — `/ui-balance:ui-balance`, `/ui-balance:polish-page`,
-`/ui-balance:polish-app`, `/ui-balance:fsd-styled-components`,
-`/ui-balance:api-backend`, `/ui-balance:semantic-commits` — and Claude also picks
-them up on its own when a request matches.
-
-The plugin has no `version` field, so every new commit on the default branch is
-a new version; `claude plugin update ui-balance@ivan-skills` pulls it.
-
-### Other agents (Codex, Cursor, Copilot, Gemini CLI, …)
-
-```bash
-npx skills@latest add YOUR_GH_USER/ui-balance
-```
-
-Add `--skill <name>` to install only some of them, `-a <agent>` to pick the
-agent, and `-g` to install for your user rather than the project. Installed this
-way into Claude Code, a skill is invoked by its own name (`/ui-balance`,
-`/polish-page`); in Codex, as `$ui-balance`. The polish skills link to
-polish-page, fsd-styled-components and semantic-commits, so install those
-alongside them. Use one
-install method per agent — installing both the plugin and the `npx skills` copy
-into Claude Code gives you every skill twice.
-
-## Usage
-
-```text
-/ui-balance:ui-balance
-/ui-balance:ui-balance settings, feed, product details
-/ui-balance:ui-balance audit only /messages
-/ui-balance:polish-page /settings
-/ui-balance:polish-page http://localhost:5173/products /products/42 keep the hero
-/ui-balance:polish-app
-/ui-balance:polish-app checkout, account pages
-/ui-balance:api-backend add an endpoint that archives a project
-/ui-balance:semantic-commits split the working tree into commits
-```
-
-- ui-balance with no arguments covers the whole active app, including its
-  dialogs and other overlays; routes, features or components narrow it; `audit
-  only` reports findings and evidence without edits.
-- polish-page takes URLs or paths in order; any other words are directions.
-- polish-app with no arguments covers every page; names or areas limit it.
-
-The frontend skills edit frontend code only, and none of the skills commit unless
-you ask.
+- **Format**: `type(scope): subject`, at most 72 characters, imperative and
+  lowercase, with an optional body that explains why.
+- **Eleven types**, each with a rule. For example, CSS that users see is `feat` or
+  `fix`, never `style`.
+- **Scopes** come from the repository's packages; a change that spans packages
+  either splits or takes no scope.
+- **One logical change per commit**: split by hunk when a file mixes concerns, and
+  make each commit build on its own.
+- **Breaking changes** take `!` and a `BREAKING CHANGE:` footer saying what to do.
+- **Branches and PR titles**: branches are `<type>/<topic>`, and a PR title uses
+  the header format, since a squash merge makes it the commit header.
+- **Checking and fixing**: a two-line check over the branch's headers, and safe
+  ways to fix a header before it is pushed.
 
 ## Project add-ons
 
-Every project names its route table, tokens and shared components differently.
-The skills discover them, but a short add-on file per skill makes a pass faster
+Every project names its route table, tokens, packages and base classes
+differently. The skills discover them, but a short add-on file makes them faster
 and keeps project rules from being guessed. Each skill reads
-**`.claude/<skill-name>.md`** (or `.agents/<skill-name>.md`) before it starts,
-and what it says overrides the skill's generic discovery and defaults; your
-instructions in the request override both.
+**`.claude/<skill-name>.md`** (or `.agents/<skill-name>.md`) before it starts.
+What the add-on says overrides the skill's generic discovery and defaults, and
+your instructions in the request override both. Commit add-ons so every
+contributor's agent follows the same rules.
 
 | File | Typical contents |
 | --- | --- |
@@ -182,9 +237,9 @@ instructions in the request override both.
 | `.claude/polish-app.md` | Page order, alternate builds, removed features never to restore, domain rules, commit style. polish-app also reads `polish-page.md`. |
 | `.claude/fsd-styled-components.md` | Source root and alias, layer and segment set, state library and binding, HTTP client, optimistic/runner helpers, demo fixtures, architecture doc. |
 | `.claude/api-backend.md` | Backend package and alias, base repository/entity names, custom decorators, reference implementations, dev/test commands, generated API client. |
-| `.claude/semantic-commits.md` | The scope table (scope → path), the base branch for the header check, what counts as a breaking change here, files to split by key. |
+| `.claude/semantic-commits.md` | Scope table (scope → path), the base branch for the header check, what counts as a breaking change here, files to split by key. |
 
-An example for ui-balance:
+`.claude/ui-balance.md`:
 
 ```markdown
 # ui-balance: project add-on
@@ -210,7 +265,27 @@ An example for ui-balance:
 - Never complete the checkout flow; stop at the review step.
 ```
 
-## Layout
+`.claude/semantic-commits.md`:
+
+```markdown
+# semantic-commits: project add-on
+
+Base branch: dev
+
+| Scope | Path |
+| --- | --- |
+| `web` | `web/` |
+| `api` | `api/` |
+| `api-client` | `packages/api-client/` |
+| `skills` | `skills/`, `.claude/` |
+| `deps` | dependency bumps only, as `build(deps): …` |
+
+- Breaking: removing or renaming an API endpoint or field, an env variable, a
+  public route, or an export of `packages/api-client`.
+- Split `web/src/i18n/*.ts` by message-key prefix.
+```
+
+## Repository layout
 
 ```text
 .claude-plugin/
@@ -234,7 +309,7 @@ skills/
   semantic-commits/SKILL.md  Conventional Commits rules and the header check
 ```
 
-When changing a skill's scope, keep its `SKILL.md` description, the manifests'
+When a skill's scope changes, keep its `SKILL.md` description, the manifests'
 descriptions and (for ui-balance) `agents/openai.yaml` consistent.
 
 ## License
