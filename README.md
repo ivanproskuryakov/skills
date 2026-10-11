@@ -92,7 +92,7 @@ The examples use the plugin's `/ui-tools:` namespace. A skill installed with
 /ui-tools:ui-balance settings, feed, product details
 /ui-tools:ui-balance audit only /messages
 /ui-tools:polish-page /settings
-/ui-tools:polish-page http://localhost:5173/products /products/42 keep the hero
+/ui-tools:polish-page /products /products/42 keep the hero
 /ui-tools:polish-app
 /ui-tools:polish-app checkout, account pages
 /ui-tools:fsd-styled-components review features/checkout
@@ -258,7 +258,7 @@ contributor's agent follows the same rules.
 - Brand green is a fill only; small text uses --text-accent.
 
 ## Run and check
-- Dev server with mock data: pnpm dev (http://localhost:5173)
+- Dev server with mock data: pnpm dev (port 5173)
 - Checks: pnpm typecheck && pnpm lint && pnpm build
 - Storybook: pnpm storybook
 
