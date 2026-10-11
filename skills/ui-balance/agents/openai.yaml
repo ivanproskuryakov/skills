@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI Balance"
+  short_description: "Balance colors, spacing, dialogs, lists and chat"
+  default_prompt: "Use $ui-balance to navigate the active app and finish its visual consistency: typography and colors, margins and padding, dialog content, list item sizes, chat, comment reactions, and responsive interaction states."

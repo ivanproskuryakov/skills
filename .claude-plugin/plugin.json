@@ -1,0 +1,10 @@
+{
+  "name": "ui-balance",
+  "description": "Balance a web app's finished look: typography, colors, spacing, component sizes and interaction states across pages, dialogs, lists, chats and comments, verified in the running app with before/after evidence.",
+  "author": {
+    "name": "Ivan"
+  },
+  "repository": "https://github.com/YOUR_GH_USER/ui-balance",
+  "license": "MIT",
+  "keywords": ["ui", "design", "frontend", "visual-review", "polish", "consistency"]
+}
