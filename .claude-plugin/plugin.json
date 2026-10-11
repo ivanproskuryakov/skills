@@ -1,5 +1,5 @@
 {
-  "name": "skills",
+  "name": "ui-tools",
   "version": "1.0.0",
   "description": "Ivan's engineering skills: balance a web app's typography, colors, spacing and states (ui-balance), polish pages until they are ready to market (polish-page, polish-app), Feature-Sliced Design + styled-components conventions (fsd-styled-components), layered routing-controllers/Inversify/TypeORM backend conventions (api-backend), and Conventional Commits (semantic-commits).",
   "author": {
